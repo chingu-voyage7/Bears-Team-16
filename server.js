@@ -20,8 +20,8 @@ const PORT = process.env.PORT || 5000
 //  });
 
 
-app.listen(3000, '127.0.0.1');  
-console.log('Node server running on port 3000');  
+// app.listen(3000, '127.0.0.1');  
+// console.log('Node server running on port 3000');  
 
 // var express = require('express');
 // var app = express();
