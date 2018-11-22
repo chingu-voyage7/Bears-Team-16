@@ -22,13 +22,48 @@ Thoughts:
 
 Game: the game object
 
-Player: represents a player
+Player: represents a player, fields:
+
+  - id: a unique id assigned to identify the player
+
+  - name: the player's name
+
+  - description: a brief description of the player (probably not
+  necessary when game is played live)
+
+  - icon: visual representation of player on "big screen"
+
+  - location: player's current location (a Location)
+
+  - vital: weather player is alive
+
+  - inv: list of Items player has
 
 NPC: represents a non-player character
 
-Item: represents an item (similar to NPC) in the game
+Item: represents an item (similar to NPC) in the game, fields:
 
-Location: represents a location in the game (each tied to a QR code)
+  - name: name of item
+
+  - description: description of item
+
+  - location: where the item is located (unless item is on player)
+
+  - onPlayer: whether the item is being used by a player
+
+  - Player: if onPlayer, the player currently using the item
+
+Location: represents a location in the game (each tied to a QR code), fields:
+
+  - exits: list of exits from this room
+
+  - items: list of items currently in this room
+
+  - name: the short name of this room
+
+  - description: a longer description of the room
+
+  - desAdj: description given to adjacent rooms
 
 Event: represents an event occurring in the game, either a
 TriggeredEvent or a AlarmEvent, the latter automatically occurring at
