@@ -1,0 +1,9 @@
+{
+  "name": "bears-team-16",
+  "description": "",
+  "version": "1.0.0",
+  "engines": {
+    "node": "10.3.0"
+  }
+}
+
