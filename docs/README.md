@@ -9,6 +9,7 @@ Players interact face-to-face and use their smartphones for clues, actions, and 
 Mobile City comes with premade scenarios but you can modify them or create your own.  
 
 ![example map](images/example.png)  
+![example map](images/floorplan.png)  
 
 ## Hosting your own Event
 ### Requirements

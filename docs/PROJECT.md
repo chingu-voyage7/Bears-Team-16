@@ -9,8 +9,6 @@ Gameplay can be customized for murder mysteries, survival games, LARPs, and sand
 Players interact face-to-face and use their smartphones for clues, actions, and items.  
 Mobile City comes with premade scenarios but you can modify them or create your own.  
 
-![example map](images/example.png)  
-
 ## Progress
 - [ ] [Design Document (Outline)](OUTLINE.md)  
 
@@ -27,7 +25,7 @@ Server-side JavaScript: [Node.js Docs](https://nodejs.org/dist/latest/docs/api/)
 Native JavaScript: [Electron Docs](https://electronjs.org/docs)  
 GitHub Website: [GitHub Website Docs](https://help.github.com/)  
 Git GUI: [GitHub Desktop Docs](https://help.github.com/desktop/guides/)  
-GitHub-flavored Markdown: [Markdown Docs](https://help.github.com/articles/basic-writing-and-formatting-syntax/)  
+GitHub-flavored Markdown: [Markdown Docs](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf)  
 CSS Grid Layout: [Grid Guide](https://css-tricks.com/snippets/css/complete-guide-grid/)  
 
 ## Information

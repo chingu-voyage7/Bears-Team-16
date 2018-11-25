@@ -28,6 +28,7 @@ like if a NPC handcuffed you to a pipe.
   - [ ] Webpage
   - [ ] Networking
   - [ ] Scenario Modding
+  - [ ] Google Map Import Tags
 - [ ] Smartphone and tablet webpage
   - [ ] QR Code reader
   - [ ] Websockets or WebRTC to Server
@@ -36,8 +37,8 @@ like if a NPC handcuffed you to a pipe.
   - [ ] Play video clip
 - [ ] Runtime Server
   - [ ] Load and parse Scenario Folder(s)
-  - [ ] Import Google Maps data
-    - [ ] Generate Game Map from data
+  - [ ] Import Google Maps real-world data
+    - [ ] Generate Game Map from real-world data and Scenario Locations
 - [ ] Generate printable pages
   - [ ] Station QR Codes
   - [ ] Badges
