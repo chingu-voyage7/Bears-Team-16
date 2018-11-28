@@ -1,13 +1,31 @@
 {
   "name": "bears-team-16",
-  "description": "",
+  "description": "Mobile City, a shared experience game for 1 to over 100 players.",
   "version": "1.0.0",
+  "license": "AGPL-3.0+",
+  "config": {
+    "engine-strict": true,
+    "init-license": "AGPL-3.0+"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/RefinedSoftwareLLC/refinedsoftwarellc.gitlab.io.git"
+  },
+  "main": "server.mjs",
+  "bin": {
+    "server": "./server.mjs"
+  },
+  "scripts": {
+    "start": "node --experimental-modules server.mjs"
+  },
   "dependencies": {
     "express": "^4.9.8",
-    "ejs": ">=0.7.x"
+    "ejs": ">=0.7.x",
+    "uws": "^10.148.1"
   },
   "engines": {
     "node": "10.3.0",
+    "npm": "^6.4.1",
     "ejs": ">=0.7.x"
   },
   "devDependencies": {
