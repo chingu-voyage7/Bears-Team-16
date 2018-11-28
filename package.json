@@ -16,7 +16,7 @@
     "server": "./server.mjs"
   },
   "scripts": {
-    "start": "node --experimental-modules server.mjs"
+    "start": "babel-watch server.mjs"
   },
   "dependencies": {
     "express": "^4.9.8",
