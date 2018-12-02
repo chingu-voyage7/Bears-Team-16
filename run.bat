@@ -1,2 +1,2 @@
 @ setLocal & echo off
-npm start
+npm start dev
