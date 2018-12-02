@@ -1,5 +1,5 @@
 # Mobile City (Bears-Team-16)
-[Mobile City](https://github.com/chingu-voyage7/Bears-Team-16) | Voyage-7 | https://chingu.io/
+[Mobile City](https://bears-team-16.herokuapp.com) | Voyage-7 | https://chingu.io/
 
 ## Welcome
 Welcome to the documentation for Mobile City!  
@@ -48,4 +48,4 @@ For the sub-optimal online experience:
 - [Mobile City Source Code](https://github.com/chingu-voyage7/Bears-Team-16)  
 
 ## Copywrite
-- Unknown  
+- AGPL-3.0+  
