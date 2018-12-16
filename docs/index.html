@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="cache-control" content="no-cache" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile City</title>
+<script type='module'>
+window.boot=function boot() {
+  const t=document.createElement('script');
+  t.id='./index.mjs';
+  t.type='module';
+  t.src='./index.mjs'+'?'+new Date().getTime();
+  t.addEventListener('error', function bootError() { document.body.innerHTML='Error loading browser.main.mjs! Please reload this webpage.<br/>If this error persists, please try again later.'; });
+  document.head.appendChild(t);
+};
+</script>
+<script nomodule>document.body.innerHTML='This website needs ES6 Modules!<br/>Please enable ES6 Modules and then reload this webpage.';</script>
+</head>
+
+<body onload="boot()" style="background: #F5F5F5;margin: 0;border: 0;padding: 0;text-align: center;"><noscript>This website needs JavaScript!<br/>Please enable JavaScript and then reload this webpage.</noscript></body>
+
+</html>
