@@ -5,22 +5,34 @@
   }
 }
 */
+* {
+  text-align: center;
+}
+
 body {
   background-image: url(background.png);
 }
 
 .app {
   display: grid;
-  grid-template-columns: 100px auto 100px;
-  grid-template-rows: 100px auto 100px;
+  grid-template-columns: auto;
+  grid-template-rows: 50px auto;
+  grid-template-areas:
+    "header"
+    "main"
 }
 
 .tab {
-  grid-row: 1;
+  grid-area: header;
+  align-items: stretch;
 }
 
 .page {
-  
-  grid-row: 2;
+  grid-area: main;
+  align-items: stretch;
   background-image: url(lined_paper.png);
+}
+
+.pick {
+  
 }
