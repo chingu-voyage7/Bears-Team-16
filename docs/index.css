@@ -1,1 +1,26 @@
-console.log('hello world');
+/*
+@media (min-resolution: 2dppx) {
+  .image {
+    background-image: url(image@2x.png);
+  }
+}
+*/
+body {
+  background-image: url(background.png);
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 100px auto 100px;
+  grid-template-rows: 100px auto 100px;
+}
+
+.tab {
+  grid-row: 1;
+}
+
+.page {
+  
+  grid-row: 2;
+  background-image: url(lined_paper.png);
+}
