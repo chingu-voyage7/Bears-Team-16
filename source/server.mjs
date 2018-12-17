@@ -4,7 +4,7 @@ import uws from 'uws';
 
 const PORT = process.env.PORT || 443;
 
-let app = express();
+const app = express();
 app.use('/', express.static(path.join(path.resolve(), 'docs'), {'index': ['index.html', 'index.htm']}));
 app.listen(PORT, () => console.log(`Webpage on https://localhost:${ PORT }`));
 
