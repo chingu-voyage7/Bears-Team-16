@@ -24,13 +24,11 @@
     "url": "git+https://github.com/chingu-voyage7/Bears-Team-16.git"
   },
   "dependencies": {
-    "chalk": "^2.0.1",
-    "node": "^11.2.0",
-    "ws": "^6.1.2"
+    "express": "4.16.4",
+    "express-ws": "4.0.0",
+    "node": "^10.3.0"
   },
-  "devDependencies": {
-    "express": "^4.16.4"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">= 10.3.0",
     "npm": ">= 6.4.1"

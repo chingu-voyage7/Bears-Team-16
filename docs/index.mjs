@@ -1,8 +1,12 @@
-console.log('hello there world');
+console.log('index.mjs starting');
 
-var HOST = location.origin.replace(/^https/, 'wss');
-var ws = new WebSocket(HOST);
+let HOST = location.origin.replace(/^http/, 'ws');
+let ws = new WebSocket(HOST);
 
-ws.onmessage = function (event) {
-  console.log('received' + event);
-};
+ws.addEventListener('message', function (event) {
+  console.log(`Server said: ${event.data}`);
+});
+
+ws.addEventListener('open', function (event) {
+  ws.send('Hello Server!');
+});
