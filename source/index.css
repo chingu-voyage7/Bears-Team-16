@@ -1,0 +1,112 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  /* border: 0; */
+  padding: 0;
+  text-align: center;
+  
+  font-family: monospace;
+  font-size: 15px;
+  line-height:100%;
+}
+
+body {
+  background-image: url(images/background.png);
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  overflow: hidden;
+  grid-auto-rows: minmax(40px, max-content);
+  grid-auto-flow: row dense;
+  grid-template-rows: 40px repeat(auto-fit, minmax(40px, 1fr));
+  grid-gap: 2px;
+  gap: 2px;
+}
+
+.tabs {
+  grid-row: 1;
+  top: 0;
+  position: sticky;
+  display: flex;
+  flex-direction: row;
+  padding: 1px;
+  grid-gap: 1px;
+  gap: 1px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.75);
+}
+.tab {
+  flex-grow: 1;
+  min-height: 40px;
+  min-width: 40px;
+  background-color: rgba(192,192,192, 1);
+  outline: 1px solid black;
+  display: grid;
+  align-items: center;
+  -webkit-user-select: none; /* Safari, Chrome */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE */
+  user-select: none; /* CSS3 */
+}
+.tab:hover {
+  background-color: rgba(224,224,224, 1);
+}
+.tab:active {
+  background-color: rgba(96,96,96, 1);
+  filter: invert(100%);
+}
+
+.page {
+  grid-row: 2;
+  overflow-x: auto;
+  overflow-y: scroll;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content:start;
+  grid-gap: 5px;
+  gap: 5px;
+  padding: 5px;
+}
+/* Fix scrollbar removing padding-bottom */ .page::after { content: ""; height: 1px; margin: -1px; }
+
+.pick {
+  min-height: 40px;
+  border: 1px solid black;
+  background-image: url(images/lined_paper.png);
+  text-align: left;
+}
+
+/* Collapse Tabs into single header button, Hide page while menu open, Images on separate lines */
+@media (min-width: 0px) and (max-width: 400px) {
+  .tab:not(.menu) {
+    display:none;
+  }
+  .tabs {
+    flex-direction: column;
+  }
+}
+
+/* Header Tabs, No wasted space */
+@media (min-width: 400px) and (max-width: 961px) {
+  .menu  {
+    display:none;
+  }
+}
+
+/* Header Tabs, Show Portraits Left of Text, Extra Spacing */
+@media (min-width: 961px) {
+  .menu  {
+    display:none;
+  }
+}
+
+/*
+@media (min-resolution: 2dppx) {
+  .image {
+    background-image: url(image@2x.png);
+  }
+}
+*/

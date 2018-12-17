@@ -1,5 +1,7 @@
 console.log('index.mjs starting');
 
+
+
 let HOST = location.origin.replace(/^http/, 'ws');
 let ws = new WebSocket(HOST);
 

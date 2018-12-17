@@ -9,7 +9,7 @@ const noop = ()=>{};
 
 const app = express();
 const ewss = handleWS(app);
-app.use('/', express.static(path.join(path.resolve(), 'docs'), {'index': ['index.html', 'index.htm']}));
+app.use('/', express.static(path.join(path.resolve(), 'source'), {'index': ['index.html', 'index.htm']}));
 
 app.ws('/', function(ws, req) {
   console.log('Client connected');
