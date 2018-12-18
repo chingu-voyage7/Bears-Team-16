@@ -55,13 +55,22 @@ body {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE */
   user-select: none; /* CSS3 */
+  font-size: 17px;
+  text-shadow: none;
+}
+.tab i {
+  text-shadow: none;
 }
 .tab:hover {
   background-color: rgba(224,224,224, 1);
+  cursor: pointer;
 }
 .tab:active {
   background-color: rgba(96,96,96, 1);
   filter: invert(100%);
+}
+.tab[name=account] {
+  max-width: calc(var(--min) * 2);
 }
 
 .page {
@@ -76,15 +85,6 @@ body {
   padding: var(--gap);
 }
 
-/* Fix scrollbar removing padding-bottom */
-@supports (-moz-appearance:none) {
-  .page::after {
-    content: "";
-    height: 1px;
-    margin: calc(-var(--gap) + var(--gap)); /* padding - gap */
-  }
-}
-
 .pick {
   min-height: var(--min);
   box-shadow: 0 0 10px rgba(0,0,0,0.25);
@@ -92,28 +92,40 @@ body {
   text-align: left;
   padding: 15px;
 }
+.pick:hover {
+  cursor: pointer;
+}
 
 /* Collapse Tabs into single header button, Hide page while menu open, Images on separate lines */
 @media (min-width: 0px) and (max-width: 400px) {
-  .tab:not(.menu) {
-    display:none;
-  }
   .tabs {
     flex-direction: column;
+  }
+  .tab:not(#menu) {
+    display:none;
   }
 }
 
 /* Header Tabs, No wasted space */
 @media (min-width: 400px) and (max-width: 961px) {
-  .menu  {
+  #menu  {
     display:none;
   }
 }
 
 /* Header Tabs, Show Portraits Left of Text, Extra Spacing */
 @media (min-width: 961px) {
-  .menu  {
+  #menu  {
     display:none;
+  }
+}
+
+/* Fix scrollbar removing padding-bottom */
+@supports (-moz-appearance:none) {
+  .page::after {
+    content: "";
+    height: 1px;
+    margin: calc(var(--gap) - var(--gap)); /* padding - gap */
   }
 }
 

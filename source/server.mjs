@@ -13,8 +13,13 @@ app.use('/', express.static(path.join(path.resolve(), 'source'), {'index': ['ind
 
 app.ws('/', function(ws, req) {
   console.log('Client connected');
-  ws.on('message', function(msg) {
-    console.log(`Client said: ${msg}`);
+  ws.on('message', function(raw) {
+    try {
+      let msg = JSON.parse(raw);
+      console.log('Client said: ', msg);
+    } catch (error) {
+      console.error(`Client said wrongly: ${raw}`);
+    }
   });
   ws.on('close', () => console.log('Client disconnected'));
   ws.send('Welcome client');

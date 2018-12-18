@@ -6,6 +6,8 @@
 <meta http-equiv="cache-control" content="no-cache" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mobile City</title>
+<link rel="stylesheet" href="http://unpkg.com/normalize.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="index.css">
 <script type='module'>
 window.boot=function boot() {
@@ -24,10 +26,16 @@ window.boot=function boot() {
   <noscript>This website needs JavaScript!<br/>Please enable JavaScript and then reload this webpage.</noscript>
   <div class='app'>
     <div class='tabs'>
-      <div class='tab menu'>Menu</div>
-      <div class='tab'>Tab</div>
-      <div class='tab'>Tab</div>
-      <div class='tab'>Tab</div>
+      <div id='menu' class='tab'>Menu<i class="fas fa-bars fa-lg"></i></div>
+      <div class='tab' name='map'>Map<i class="fas fa-map-marked-alt fa-lg"></i></div>
+      <!-- <div class='tab' name='map'>Map<i class="fas fa-qrcode fa-lg"></i></div> -->
+      <div class='tab' name='location'>Location<i class="fas fa-street-view fa-lg"></i></div>
+      <div class='tab' name='stuff'>Stuff<i class="fas fa-briefcase fa-lg"></i></div>
+      <div class='tab' name='character'>Character<i class="far fa-address-card fa-lg"></i></div>
+      <div class='tab' name='videos'>Videos<i class="fas fa-film fa-lg"></i></div>
+      <div class='tab' name='account'>Account<i class="fas fa-sliders-h fa-lg"></i></div>
+      <!-- <div class='tab' name='account'>Account<i class="fas fa-cog fa-lg"></i></div> -->
+      <!-- <div class='tab' name='account'>Account<i class="far fa-sun fa-lg"></i></div> -->
     </div>
     <div class='page'>
       <div class='pick'>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10</div>
