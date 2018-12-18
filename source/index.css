@@ -14,14 +14,20 @@
 
 body {
   background-image: url(images/background.png);
+  display: grid;
+  align-content: center;
+  justify-content: center;
 }
 
 .app {
   --gap: 5px;
   --min: 45px;
+  --width: 100vw;
+  --max-width: 960px;
   
-  width: 100vw;
   height: 100vh;
+  width: var(--width);
+  max-width: var(--max-width);
   display: grid;
   overflow: hidden;
   grid-auto-rows: minmax(var(--min), max-content);
@@ -35,7 +41,8 @@ body {
   grid-row: 1;
   top: 0;
   position: sticky;
-  width: 100vw;
+  width: var(--width);
+  max-width: var(--max-width);
   display: flex;
   flex-direction: row;
   padding: 1px;
@@ -87,7 +94,8 @@ body {
   grid-row: 2;
   overflow-x: auto;
   overflow-y: scroll;
-  width: 100vw;
+  width: var(--width);
+  max-width: var(--max-width);
   display: grid;
   grid-auto-rows: max-content;
   align-content:start;

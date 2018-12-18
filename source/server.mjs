@@ -6,34 +6,54 @@ console.log('server.mjs starting');
 
 const PORT = process.env.PORT || 80;
 const noop = ()=>{};
+noop.toJSON = noop; // Required to prevent sending to client
 
 const app = express();
 const ewss = handleWS(app);
 app.use('/', express.static(path.join(path.resolve(), 'source'), {'index': ['index.html', 'index.htm']}));
 
 app.ws('/', function(ws, req) {
-  ws.on('message', function(raw) {
+  const user = ws.user = ws; // will not be same object once login is working
+  user.ws = ws;
+  ws.on('message', function(data) {
+    let msg = {};
     try {
-      console.log('Client said: ', raw);
-      let msg = JSON.parse(raw);
-      console.log('Client said: ', msg);
-      if (ws.frame !== msg.frame) {
-        throw 'Invalid frame from server', raw;
-        return;
-      };
-      if (ws.picks.includes(msg.pick)) {
-        throw 'Invalid pick from server', raw;
-        return;
-      };
-      console.log('Client picked: ', msg.pick);
+      msg = JSON.parse(data);
     } catch (error) {
-      console.error('Client error: ', error);
-    }
+      console.error('Ignoring invalid JSON from client: ', data, error);
+      return;
+    };
+    // console.log('Client said: ', msg);
+    if (typeof msg.update === 'boolean' && msg.update === true) { // server ignores all other msg data if update is true
+      sendUpdate(user);
+      return;
+    };
+    if (typeof msg.frame !== 'number' || isNaN(msg.frame) || user.frame !== msg.frame) {
+      console.error('Ignoring invalid frame from client: ', data);
+      sendUpdate(user);
+      return;
+    };
+    if (typeof msg.page !== 'string' || typeof user.pages[msg.page] !== 'object') {
+      console.error('Ignoring invalid page from client: ', data);
+      sendUpdate(user);
+      return;
+    };
+    if (typeof msg.pick !== 'string' || typeof user.pages[msg.page].picks[msg.pick] !== 'object') {
+      console.error('Ignoring invalid pick from client: ', data);
+      sendUpdate(user);
+      return;
+    };
+    if (typeof user.pages[msg.page].picks[msg.pick].callback === 'function') {
+      user.pages[msg.page].picks[msg.pick].callback(user, msg.page, msg.pick);
+    };
+    generateMockLocation(user);
   });
   ws.on('close', () => console.log('Client disconnected'));
-  ws.send('Welcome client');
-  ws.frame = 0;
-  ws.picks = [];
+  // mock login
+  user.frame = 0;
+  user.pages = {};
+  user.pages.location = { picks: {} };
+  generateMockLocation(user);
 });
 const wss = ewss.getWss('/');
 
@@ -47,10 +67,14 @@ app.use(function (err, req, res, next) {
 
 app.listen(PORT, () => console.log('Webpage on http://localhost or https://bears-team-16.herokuapp.com'));
 
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
+const sendUpdate = (user) => {
+  user.ws.send(JSON.stringify({ frame: user.frame, pages: user.pages }));
+};
+
+const sendUpdateAll = function sendUpdateAll() {
+  wss.clients.forEach((ws) => {
+    if (ws.readyState === ws.OPEN) {
+      sendUpdate(ws.user);
     };
   });
 };
@@ -58,26 +82,37 @@ wss.broadcast = function broadcast(data) {
 //////////
 // MOCK //
 //////////
-
-const generateLocation = (user) => {
+const generateMockPick = (user) => {
+  const callback = (user, page, pick) => {
+    console.log('Callback: Client picked ' + page + '/' + pick);
+  };
+  callback.toJSON = noop; // Required to prevent sending to client
+  let text = Math.random(36).toString(36);
+  let lines = Math.floor(Math.random() * 3) + 1;
+  for (let i = 1; i < lines; i++) {
+    text += '<br>' + Math.random(36).toString(36);
+  };
+  return {
+    text: text,
+    callback: callback,
+  };
+};
+const generateMockLocation = (user) => {
   user.frame += 1;
-  const data = {};
-  data.frame = user.frame;
-  user.picks = [
-    '1\n2\n3\n4\n5\n6\n7\n8\n9\n10',
-    Math.random(16).toString(36),
-    Math.random(16).toString(36),
-    Math.random(16).toString(36),
-    Math.random(16).toString(36),
-    Math.random(16).toString(36),
-  ];
-  data.picks = user.picks;
-  return JSON.stringify(data);
+  delete user.pages.location.picks;
+  user.pages.location.picks = {};
+  user.pages.location.picks[0] = generateMockPick();
+  user.pages.location.picks[1] = generateMockPick();
+  let boxes = Math.floor(Math.random() * 6) + 1;
+  for (let i = 2; i < boxes; i++) {
+    user.pages.location.picks[i] = generateMockPick();
+  };
+  sendUpdate(user);
 };
 
 setInterval(() => {
   wss.clients.forEach((user) => {
-    user.send(generateLocation(user));
+    // user.send(generateMockLocation(user));
   });
 }, 2000);
 
