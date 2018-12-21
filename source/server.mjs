@@ -4,7 +4,7 @@ import handleWS from 'express-ws';
 
 console.log('server.mjs starting');
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 const noop = ()=>{};
 noop.toJSON = noop; // Required to prevent sending to client
 
@@ -16,6 +16,7 @@ app.ws('/', function(ws, req) {
   const user = ws.user = ws; // will not be same object once login is working
   user.ws = ws;
   ws.on('message', function(data) {
+    console.log("DATA: "+data);
     let msg = {};
     try {
       msg = JSON.parse(data);
@@ -23,7 +24,7 @@ app.ws('/', function(ws, req) {
       console.error('Ignoring invalid JSON from client: ', data, error);
       return;
     };
-    // console.log('Client said: ', msg);
+
     if (typeof msg.update === 'boolean' && msg.update === true) { // server ignores all other msg data if update is true
       sendUpdate(user);
       return;
@@ -116,4 +117,4 @@ setInterval(() => {
   });
 }, 2000);
 
-setInterval(noop, 60000); // heartbeat: This keeps the fork from closing.
+setInterval(noop, 6000); // heartbeat: This keeps the fork from closing.

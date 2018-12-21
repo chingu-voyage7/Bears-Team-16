@@ -68,3 +68,7 @@ Location: represents a location in the game (each tied to a QR code), fields:
 Event: represents an event occurring in the game, either a
 TriggeredEvent or a AlarmEvent, the latter automatically occurring at
 a predetermined (possibly random) time
+
+NOTE: Do not use 'require' as it will not work
+
+NOTE: index.mjs is server side, index.html is client side
