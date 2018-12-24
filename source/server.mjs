@@ -63,9 +63,10 @@ app.ws('/', function(ws, req) {
   // mock login
   user.frame = 0;
   user.pages = {};
-  generateMockPageTravel(user);
-  generateMockPageInteract(user);
   generateMockPageCharacter(user);
+  generateMockPageInteract(user);
+  generateMockPageTravel(user);
+  generateMockPageVideos(user);
   generateMockPageAccount(user);
   generateTabs(user);
 });
@@ -228,6 +229,16 @@ const generateMockPageTravel = (user) => {
   user.pages[page] = new Page(); // overwrite previous page
   createUi(user, page, {
     info: 'QR Code Reader',
+  });
+  sendUpdate(user);
+};
+
+const generateMockPageVideos = (user) => {
+  user.frame += 1;
+  const page = 'videos';
+  user.pages[page] = new Page(); // overwrite previous page
+  createUi(user, page, {
+    info: 'Tutorial Video',
   });
   sendUpdate(user);
 };

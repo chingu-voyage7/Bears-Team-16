@@ -169,10 +169,18 @@ const renderPage = (pageName, pageData) => {
   };
   
   // generate new elements.
-  pageData.infos.forEach((data) => { renderData(page, data); });
-  pageData.picks.forEach((data) => { renderData(page, data); });
-  pageData.items.forEach((data) => { renderData(page, data); });
-  pageData.chars.forEach((data) => { renderData(page, data); });
+  if (pageName === 'account') {
+    pageData.picks.forEach((data) => { renderData(page, data); });
+    pageData.infos.forEach((data) => { renderData(page, data); });
+    pageData.items.forEach((data) => { renderData(page, data); });
+    pageData.chars.forEach((data) => { renderData(page, data); });
+  } else {
+    pageData.infos.forEach((data) => { renderData(page, data); });
+    pageData.picks.forEach((data) => { renderData(page, data); });
+    pageData.items.forEach((data) => { renderData(page, data); });
+    pageData.chars.forEach((data) => { renderData(page, data); });    
+  };
+  
   // automated security settings.
   let links = [...page.getElementsByTagName('a')];
   for (let iLink in links) {

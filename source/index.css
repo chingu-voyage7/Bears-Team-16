@@ -124,19 +124,19 @@ i {
 }
 .page > .link {
   min-height: calc(var(--min) - 15px);
-  margin-bottom: 15px;
+  margin-top: 15px;
   color: black;
   text-decoration: none;
 }
-.link:last-child  {
+.link:first-child  {
   min-height: var(--min);
-  margin-bottom: 0px;
+  margin-top: 0px;
 }
 .page > .link:hover {
   min-height: calc(var(--min) - 15px);
   background-color: #0002;
 }
-.page > .link:last-child:hover  {
+.page > .link:first-child:hover  {
   min-height: var(--min);
 }
 
