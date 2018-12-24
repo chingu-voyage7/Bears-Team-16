@@ -19,14 +19,18 @@ body {
   justify-content: center;
 }
 
-.app {
+i {
+  text-shadow: none;
+}
+
+#app {
   --gap: 5px;
   --min: 45px;
   --width: 100vw;
   --max-width: 960px;
-  
   height: 100vh;
   width: var(--width);
+  max-height: 100%;
   max-width: var(--max-width);
   display: grid;
   overflow: hidden;
@@ -42,6 +46,7 @@ body {
   top: 0;
   position: sticky;
   width: var(--width);
+  max-height: 100%;
   max-width: var(--max-width);
   display: flex;
   flex-direction: row;
@@ -49,10 +54,12 @@ body {
   grid-gap: 1px;
   gap: 1px;
   box-shadow: 0 0 10px rgba(0,0,0,0.75);
+  z-index: 2;
 }
 .tab {
   flex-grow: 1;
   min-height: var(--min);
+  max-height: var(--min);
   min-width: var(--min);
   background-color: rgba(192,192,192, 1);
   outline: 1px solid black;
@@ -67,9 +74,6 @@ body {
   text-shadow: none;
   z-index: 2;
 }
-.tab i {
-  text-shadow: none;
-}
 .tab:hover {
   background-color: rgba(224,224,224, 1);
   cursor: pointer;
@@ -77,9 +81,7 @@ body {
 .tab:active {
   background-color: rgba(96,96,96, 1);
   filter: invert(100%);
-}
-.tab[name=account] {
-  max-width: calc(var(--min) * 2);
+  z-index: 3;
 }
 
 @keyframes expanding-page {
@@ -95,6 +97,7 @@ body {
   overflow-x: auto;
   overflow-y: scroll;
   width: var(--width);
+  max-height: 100%;
   max-width: var(--max-width);
   display: grid;
   grid-auto-rows: max-content;
@@ -110,68 +113,105 @@ body {
   animation: expanding-page 0.4s ease-out;
 }
 
-.pick {
+.page div, .page a {
+  text-align: left;
+}
+
+.page .pick, .page .item, .page .char {
   min-height: var(--min);
   box-shadow: 0 0 10px rgba(0,0,0,0.25);
-  background-image: url(images/lined_paper.png);
-  text-align: left;
   padding: 15px;
 }
+.page > .link {
+  min-height: calc(var(--min) - 15px);
+  margin-bottom: 15px;
+  color: black;
+  text-decoration: none;
+}
+.link:last-child  {
+  min-height: var(--min);
+  margin-bottom: 0px;
+}
+.page > .link:hover {
+  min-height: calc(var(--min) - 15px);
+  background-color: #0002;
+}
+.page > .link:last-child:hover  {
+  min-height: var(--min);
+}
+
+.page:not([name=account]) > .pick {
+  background-image: url(images/lined_paper.png);
+}
+.page[name=account] > .pick {
+  background-color: rgba(192,192,192, 1);
+  outline: 1px solid black;
+}
+
 .pick:hover {
   cursor: pointer;
 }
 
-/* Collapse Tabs into single header button, Hide page while menu open, Images on separate lines */
+#collapse {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  background-color: #0009;
+  z-index: -1;
+}
+
+/* Collapse Tabs into single header button, Cover page when tabs are expanded, Images on separate lines */
 @media (min-width: 0px) and (max-width: 400px) {
   .tabs {
     flex-direction: column;
+    overflow-y: auto;
+    position:fixed;
   }
-  #menu.expanded {
+  #header.expanded > .expander {
     display: none;
   }
-  #menu:not(.expanded) ~ .tab, #menu:not(.expanded) ~ #collapse {
+  #header:not(.expanded) > .tab:not(.expander), #header:not(.expanded) ~ #collapse {
     display: none;
   }
-  .tab[name=account] {
-    max-width: inherit;
-  }
-  .tab.expanded:not(#menu) {
-    border: 2px solid black;
-  }
-  #menu.expanded ~ #collapse {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: fixed;
-    background-color: #0009;
+  #header.expanded ~ #collapse {
     z-index: 1;
+  }
+  .tab.expanded:not(.expander) {
+    border: 2px solid black;
   }
 }
 
 /* Header Tabs, No wasted space */
 @media (min-width: 400px) and (max-width: 961px) {
-  #menu, #collapse  {
+  .expander, #collapse  {
     display: none;
   }
-  .tab.expanded:not(#menu) {
+  .tab.expanded:not(.expander) {
     outline: unset;
     margin: -1px;
     border: 3px solid black;
     border-bottom-width: 0;
+  }
+  .tab[name=account] {
+    max-width: calc(var(--min) * 2);
   }
 }
 
 /* Header Tabs, Show Portraits Left of Text, Extra Spacing */
 @media (min-width: 961px) {
-  #menu, #collapse  {
+  .expander, #collapse  {
     display: none;
   }
-  .tab.expanded:not(#menu) {
+  .tab.expanded:not(.expander) {
     outline: unset;
     margin: -1px;
     border: 3px solid black;
     border-bottom-width: 0;
+  }
+  .tab[name=account] {
+    max-width: calc(var(--min) * 2);
   }
 }
 

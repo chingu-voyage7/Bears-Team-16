@@ -47,5 +47,18 @@ For the sub-optimal online experience:
 - [Mobile City Development Page](PROJECT.md)  
 - [Mobile City Source Code](https://github.com/chingu-voyage7/Bears-Team-16)  
 
-## Copywrite
-- AGPL-3.0+  
+## Copyright
+    Mobile City Copyright © 2018 Michael Gibson
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see [gnu.org/licenses](https://www.gnu.org/licenses)

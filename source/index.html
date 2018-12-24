@@ -2,58 +2,47 @@
 <html>
 
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="cache-control" content="no-cache" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset='UTF-8'>
+<meta http-equiv='cache-control' content='no-cache'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta name='description' content='Murder mysteries, survival games, LARPs, & sandboxes. 1-100 players. In-person with smartphones or online. Has scenario editor.'>
 <title>Mobile City</title>
-<link rel="stylesheet" href="http://unpkg.com/normalize.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="index.css">
+<link rel='stylesheet' href='http://unpkg.com/normalize.css' crossorigin="">
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.1/css/all.css' integrity='sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP' crossorigin='anonymous'>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="">
+<link rel='stylesheet' type='text/css' href='index.css'>
 <script type='module'>
+window.addEventListener('error', function(error) {
+  let url = error.filename
+  url = url.substring(0, (url.indexOf('#') == -1) ? url.length : url.indexOf('#'));
+  url = url.substring(0, (url.indexOf('?') == -1) ? url.length : url.indexOf('?'));
+  url = url.substring(url.lastIndexOf('/') + 1, url.length);
+  window.scriptLoadReject && window.scriptLoadReject[url] && window.scriptLoadReject[url](error);
+}, true);
 window.boot=function boot() {
   const t=document.createElement('script');
-  t.id='./index.mjs';
+  t.id='index.mjs';
   t.type='module';
-  t.src='./index.mjs'+'?'+new Date().getTime();
-  t.addEventListener('error', function bootError() { document.body.innerHTML='Error loading browser.main.mjs! Please reload this webpage.<br/>If this error persists, please try again later.'; });
+  new Promise((resolve, reject) => {
+    window.scriptLoadReject = window.scriptLoadReject || {};
+    window.scriptLoadReject[t.id] = reject;
+    t.addEventListener('error', reject);
+    t.addEventListener('load', resolve);
+  }).catch((value) => {
+    document.body.innerHTML='Error loading ' + t.id + '! Please reload this webpage.<br/>If this error persists, please try again later.<div><br/>' + t.id + ':' + value.lineno + ':' + value.colno + '<br/>' + (value && value.message);
+  });
+  t.src='./' + t.id +'?'+new Date().getTime();
   document.head.appendChild(t);
 };
 </script>
 <script nomodule>document.body.innerHTML='This website needs ES6 Modules!<br/>Please enable ES6 Modules and then reload this webpage.';</script>
 </head>
 
-<body onload="boot()" style="margin: 0;border: 0;padding: 0;text-align: center;">
+<body onload='boot()' style='margin: 0;border: 0;padding: 0;text-align: center;'>
   <noscript>This website needs JavaScript!<br/>Please enable JavaScript and then reload this webpage.</noscript>
-  <div class='app'>
-    <div class='tabs'>
-      <div id='menu' class='tab'>Menu<i class="fas fa-bars fa-lg"></i></div>
-      <div class='tab' name='map'>Map<i class="fas fa-map-marked-alt fa-lg"></i></div>
-      <!-- <div class='tab' name='map'>Map<i class="fas fa-qrcode fa-lg"></i></div> -->
-      <div class='tab' name='location'>Location<i class="fas fa-street-view fa-lg"></i></div>
-      <div class='tab' name='stuff'>Stuff<i class="fas fa-briefcase fa-lg"></i></div>
-      <div class='tab' name='character'>Character<i class="far fa-address-card fa-lg"></i></div>
-      <div class='tab' name='videos'>Videos<i class="fas fa-film fa-lg"></i></div>
-      <div class='tab' name='account'>Account<i class="fas fa-sliders-h fa-lg"></i></div>
-      <!-- <div class='tab' name='account'>Account<i class="fas fa-cog fa-lg"></i></div> -->
-      <!-- <div class='tab' name='account'>Account<i class="far fa-sun fa-lg"></i></div> -->
-      <div id='collapse'></div>
-    </div>
-    <div class='page' name='location'>
-      <div id='1' class='pick'>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10</div>
-      <div id='2' class='pick'>2</div>
-      <div id='3' class='pick'>3</div>
-      <div id='4' class='pick'>4</div>
-      <div id='5' class='pick'>5</div>
-      <div id='6' class='pick'>6</div>
-    </div>
-    <div class='page' name='account'>
-      <div class='pick'>Login</div>
-      <div class='pick'>Forgot Password</div>
-      <div class='pick'>Create Account</div>
-    </div>
-    <div class='page' name='map'>
-      <div class='pick'>QR Code</div>
-    </div>
+  <div id='app'>
+    <div id='header' class='tabs'></div>
+    <div id='collapse'></div>
   </div>
 </body>
 

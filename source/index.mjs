@@ -4,6 +4,8 @@ let HOST = location.origin.replace(/^http/, 'ws');
 let ws = new WebSocket(HOST);
 
 let frame = -1;
+let pages = {};
+let tabs = [];
 
 ws.addEventListener('message', (event) => {
   let data = event.data;
@@ -21,14 +23,15 @@ ws.addEventListener('message', (event) => {
     return;
   };
   if (typeof msg.pages !== 'object') {
-    console.error('Ignoring invalid pages from server: ', data, error);
+    console.error('Ignoring invalid pages from server:', data, error);
     // requestUpdate();
     return;
   };
   frame = msg.frame;
-  for (let pageLabel in msg.pages) {
-    renderPageData(pageLabel, msg.pages[pageLabel]);
+  for (let pageName in msg.pages) {
+    renderPage(pageName, msg.pages[pageName]);
   };
+  if (msg.tabs) { renderTabs(msg.tabs); };
 });
 
 ws.addEventListener('open', (event) => {
@@ -36,128 +39,197 @@ ws.addEventListener('open', (event) => {
   // ws.send('Hello Server!');
 });
 
-let menu = document.getElementById('menu');
+let app = document.getElementById('app');
+let header = document.getElementById('header');
+let expander = document.getElementById('expander');
 let collapse = document.getElementById('collapse');
-let tabs = [...document.getElementsByClassName('tab')];
-// let tabs2 = tabs.filter(item => item !== menu);
-let pages = [...document.getElementsByClassName('page')];
-let picks = [...document.getElementsByClassName('pick')];
-
-window.addEventListener('resize', () => {
-  menu.classList.remove('expanded');
-});
-
-menu.addEventListener('click', () => {
-  menu.classList.add('expanded');
-});
 
 collapse.addEventListener('click', () => {
-  menu.classList.remove('expanded');
+  header.classList.remove('expanded');
 });
 
-tabs.forEach((tab) => {
-  if (tab !== menu) {
-    tab.addEventListener('click', () => {
-      let tabLabel = tab.attributes['name'].value;
-      tabs.forEach((iTab) => {
-        if (iTab === tab) {
-          iTab.classList.add('expanded');
-        } else {
-          iTab.classList.remove('expanded');
-        };
-      });
-      pages.forEach((page) => {
-        let pageLabel = page.attributes['name'].value;
-        if (pageLabel === tabLabel) {
-          page.classList.add('expanded');
-        } else {
-          page.classList.remove('expanded');
-        }
-      });
-    });
-  };
+window.addEventListener('resize', () => {
+  header.classList.remove('expanded');
 });
 
-const setupPick = (pick) => {
-  pick.addEventListener('click', () => {
-    const data = {
-      frame: frame,
-      page: pick.parentNode.attributes['name'].value,
-      pick: pick.id,
-    };
-    console.log('Sending to server: ', data);
-    ws.send(JSON.stringify(data));
+const toHtml = (dom, string) => {
+  string = string || '';
+  string.split('\n').forEach((line) => {
+    const iDom = document.createElement('div');
+    iDom.textContent = line;
+    dom.appendChild(iDom);
   });
 };
 
-picks.forEach((pick) => {
-  setupPick(pick);
-});
+const renderData = (parentNode, data) => {
+  if (typeof data.name !== 'string' && typeof data.info === 'undefined' && typeof data.tab === 'undefined') {
+    console.error('Ignoring invalid ui from server:', parentNode.getAttribute('name'), ':', data);
+    return;
+  };
+  let dom = undefined;
+  if (typeof data.link === 'string') {
+    dom = document.createElement('a');
+    dom.setAttribute('href', data.link);
+  } else {
+    dom = document.createElement('div');
+  };
+  dom.setAttribute('name', data.name || '');
+  dom.className = Object.keys(data).join(' ');
+  toHtml(dom, data.pick || data.item || data.char || data.info || data.tab || '*') + ' ';
+  parentNode.appendChild(dom);
+  if (typeof data.link === 'string') {
+    const link1 = document.createElement('a');
+    link1.textContent = data.link;
+    link1.setAttribute('href', data.link);
+    dom.appendChild(link1);
+  };
+  if (typeof data.icon !== 'undefined') {
+    const icon = document.createElement('i');
+    icon.className = data.icon;
+    dom.appendChild(icon);
+  };
+  if (typeof data.expander !== 'undefined') {
+    dom.addEventListener('click', () => {
+      parentNode.classList.add('expanded');
+    });
+  } else if (typeof data.pick !== 'undefined') {
+    dom.addEventListener('click', () => {
+      const page = parentNode.getAttribute('name');
+      const temp = {
+        frame: frame,
+        page: page,
+        pick: data.name,
+      };
+      // console.log('Sending to server: ', temp);
+      ws.send(JSON.stringify(temp));
+    });
+  } else {
+    dom.addEventListener('click', () => {
+      [...parentNode.children].forEach((iDom) => { // with sibling dom elements
+        if (iDom === dom) {
+          iDom.classList.add('expanded');
+        } else {
+          iDom.classList.remove('expanded');
+        };
+      });
+      if (typeof data.tab !== 'undefined') {
+        parentNode.classList.remove('expanded');
+        [...document.getElementsByClassName('page')].forEach((iDom) => {
+          if (iDom.getAttribute('name') === dom.getAttribute('name')) {
+            iDom.classList.add('expanded');
+          } else {
+            iDom.classList.remove('expanded');
+          };
+        });
+      };
+    });
+  };
+};
 
 const requestUpdate = () => { // server ignores all other msg data if update is true
   ws.send(JSON.stringify({ update: frame }));
 };
 
-const renderPageData = (pageLabel, pageData) => {
-  if (typeof pageData.picks !== 'object') {
-    console.error('Ignoring invalid page from server: ', { pageLabel: pageData });
+// const exactlyOneOfProperties = (object, properties) => {
+  // let count = 0;
+  // for (let property of properties) {
+    // if (object[property]) { count++; };
+  // };
+  // return count === 1;
+// };
+
+const renderPage = (pageName, pageData) => {
+  if (!Array.isArray(pageData.picks) || !Array.isArray(pageData.infos) || !Array.isArray(pageData.chars) || !Array.isArray(pageData.items)) {
+    console.error('Ignoring invalid page from server:', pageName, ':', pageData);
     return;
   };
-  // getting page DOM object
+  // get page dom if exists
   let page = undefined;
-  for (let iPage in pages) {
-    let iPageLabel = pages[iPage].attributes['name'].value;
-    if (iPageLabel === pageLabel) {
-      page = pages[iPage];
-      break; // short circuit and exit entire for loop without looping over any more pages;
-    };
-  };
+  [...document.getElementsByClassName('page')].forEach((iDom) => {
+    if (iDom.getAttribute('name') === pageName) { page = iDom; };
+  });
+  // create page dom if missing
   if (typeof page !== 'object') {
-    console.error('Ignoring pageLabel from server with no found page DOM object: ', { pageLabel: pageData });
-    return;
+    page = document.createElement('div');
+    page.setAttribute('name', pageName);
+    page.className = 'page';
+    app.appendChild(page);
   };
-  // done getting page DOM object
+  // save expanded and focused elements into pageData.
+  // page.children.forEach((iDom) => { // with sibling dom elements
+    // if (typeof iDom.expanded !== 'undefined') {
+      
+    // };
+  // });
+  // delete old page data.
+  pages[pageName] = pageData;
+  // delete old ui elements.
+  while (page.firstChild) {
+    page.removeChild(page.firstChild);
+  };
   
-  let i = picks.length; // while loop decreases this by 1;
-  while (i--) { // required for loop to not break when deleting or appending items to array
-    const pick = picks[i];
-    // skip picks from other pages;
-    if (pageLabel !== pick.parentNode.attributes['name'].value) { continue; } // short circuit but continue while loop with next i
-    const pickLabel = pick.id;
-    // removing missing picks from page DOM object
-    if (typeof pageData.picks[pickLabel] !== 'object') {
-      picks.splice(i, 1); // modifies picks array in place
-      page.removeChild(pick);
-      continue; // short circuit but continue while loop with next i
-    };
-    // updating changed picks from page DOM object
-    const pickData = pageData.picks[pickLabel];
-    if (typeof pickData.text === 'undefined') { pickData.text = '*'; };
-    pick.innerHTML = pickData.text;
+  // generate new elements.
+  pageData.infos.forEach((data) => { renderData(page, data); });
+  pageData.picks.forEach((data) => { renderData(page, data); });
+  pageData.items.forEach((data) => { renderData(page, data); });
+  pageData.chars.forEach((data) => { renderData(page, data); });
+  // automated security settings.
+  let links = [...page.getElementsByTagName('a')];
+  for (let iLink in links) {
+    links[iLink].target = '_blank';
+    links[iLink].rel = 'external noopener noreferrer nofollow';
   };
-  // adding new picks to page DOM object
-  for (let pickLabel in pageData.picks) {
-    // skip picks with an existing pick DOM object;
-    let found = false;
-    for (let iPick in picks) {
-      let iPickLabel = picks[iPick].id;
-      if (iPickLabel === pickLabel) {
-        found = true;
-        break; // short circuit and exit entire inner for loop without looping over any more iPicks;
+};
+
+const renderTabs = (tabDataArray) => {
+  // save expanded and focused elements into pageData.
+  let expanded = undefined;
+  [...header.children].forEach((iDom) => { // with sibling dom elements
+    if (iDom.classList.contains('expanded')) {
+      expanded = iDom.getAttribute('name');
+    };
+  });
+  // delete old tab data.
+  tabs = tabDataArray;
+  // delete old ui elements.
+  while (header.firstChild) {
+    header.removeChild(header.firstChild);
+  };
+  for (let tabData of tabDataArray) {
+    if (typeof tabData.tab !== 'string' || (typeof tabData.name !== 'string' && typeof tabData.expander === 'undefined')) {
+      console.error('Ignoring invalid tab from server:', tabData);
+      return;
+    };
+    renderData(header, tabData);
+  };
+  if (!expanded) {
+    [...header.children].forEach((iDom) => { // with sibling dom elements
+      if (iDom.classList.contains('expanded')) {
+        expanded = iDom.getAttribute('name');
       };
-    };
-    if (found) {
-      continue; // short circuit but continue outer while loop with next pickLabel
-    };
-    
-    const pickData = pageData.picks[pickLabel];
-    if (typeof pickData.text === 'undefined') { pickData.text = '*'; };
-    const pick = document.createElement('div');
-    pick.id = pickLabel;
-    pick.className = 'pick';
-    pick.innerHTML = pickData.text;
-    setupPick(pick);
-    page.appendChild(pick);
-    picks.push(pick);
+    });
+  };
+  if (!expanded) {
+    [...header.children].forEach((iDom) => { // with sibling dom elements
+      if (iDom.getAttribute('display') !== 'none') {
+        expanded = iDom.getAttribute('name');
+      };
+    });
+  };
+  if (expanded) {
+    [...header.children].forEach((iDom) => { // with sibling dom elements
+      if (iDom.getAttribute('name') === expanded) {
+        iDom.classList.add('expanded');
+      } else {
+        iDom.classList.remove('expanded');
+      };
+    });
+    [...document.getElementsByClassName('page')].forEach((iDom) => {
+      if (iDom.getAttribute('name') === expanded) {
+        iDom.classList.add('expanded');
+      } else {
+        iDom.classList.remove('expanded');
+      };
+    });
   };
 };
